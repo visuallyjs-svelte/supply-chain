@@ -12,12 +12,11 @@
     import SupplyChainPalette from "./SupplyChainPalette.svelte";
     import SupplyChainInspector from "./Inspector.svelte";
 
-    export let url = "/dataset.json";
+    let url = "/dataset.json";
 
-    let pivotProperty = '';
+    let pivotProperty = $state('');
 
-    let surface;
-
+    // options for the graph layout on the lhs
     const viewOptions = {
         nodes: {
             default:{
@@ -37,6 +36,7 @@
     };
 
     const modelOptions = {
+        // this is our default edge spec
         edgeFactory:(model, type, data, cb) => {
             cb({
                 type,
@@ -48,6 +48,7 @@
         }
     }
 
+    // options for the sankey chart
     const sankeyOptions:SankeyOptions = {
         labelProperty:"name",
         linkColorStrategy:"source",
@@ -55,6 +56,7 @@
             generate:(obj) => resolveNodeColor(obj.type)
         }
     };
+
 </script>
 
 <div class="vjs-supply-chain">
@@ -73,7 +75,7 @@
         <SurfaceProvider>
             <SupplyChainPalette/>
             <div class="vjs-supply-chain-view-panel">
-                <SurfaceComponent bind:this={surface} {url}
+                <SurfaceComponent {url}
                                   {modelOptions}
                                   {renderOptions}
                                   {viewOptions}>
@@ -82,7 +84,7 @@
                 <SupplyChainInspector/>
             </div>
             <div class="vjs-supply-chain-view-panel">
-                <SankeyChartComponent style="height:500px" options={sankeyOptions} pivot={pivotProperty}/>
+                <SankeyChartComponent options={sankeyOptions} pivot={pivotProperty}/>
             </div>
         </SurfaceProvider>
     </div>
